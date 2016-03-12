@@ -1,25 +1,22 @@
 package mongodb.usermanager;
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.activation.DataSource;
 
 import org.apache.commons.logging.LogFactory;
 import org.apache.juli.logging.Log;
 import org.jasypt.util.password.StrongPasswordEncryptor;
-import org.wso2.carbon.user.core.claim.ClaimManager;
-import org.wso2.carbon.user.api.ProfileConfigurationManager;
+import org.wso2.carbon.user.api.*;
 import org.wso2.carbon.user.api.Properties;
-import org.wso2.carbon.user.api.RealmConfiguration;
-import org.wso2.carbon.user.api.UserRealm;
+import org.wso2.carbon.user.core.claim.ClaimManager;
 import org.wso2.carbon.user.core.UserStoreConfigConstants;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.common.AbstractUserStoreManager;
 import org.wso2.carbon.user.core.common.RoleContext;
+import org.wso2.carbon.user.core.jdbc.JDBCUserStoreConstants;
+import org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager;
 import org.wso2.carbon.user.core.tenant.Tenant;
 
 import com.mongodb.BasicDBObject;
@@ -166,9 +163,14 @@ public class UserStoreManager extends AbstractUserStoreManager{
 		return profileNames;
 	}
 
-	public Map<String, String> getProperties(Tenant arg0) throws UserStoreException {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, String> getProperties(Tenant tenant) throws UserStoreException {
+
+		Map<String, String> properties = new HashMap<String, String>();
+
+			properties.put("givenName", "CWA-test");
+			properties.put("mail", "cwa-test@test.com");
+
+		return properties;
 	}
 
 	public RealmConfiguration getRealmConfiguration() {
@@ -228,8 +230,25 @@ public class UserStoreManager extends AbstractUserStoreManager{
 	}
 
 	public Properties getDefaultUserStoreProperties() {
-		// TODO Auto-generated method stub
-		return null;
+
+
+		Properties defaultUserStoreProperties;
+
+		Properties properties = new Properties();
+		properties.setMandatoryProperties(MongoDBUserStoreConstants.CUSTOM_UM_MANDATORY_PROPERTIES.toArray(
+				new Property[MongoDBUserStoreConstants.CUSTOM_UM_MANDATORY_PROPERTIES.size()]));
+		properties.setOptionalProperties(MongoDBUserStoreConstants.CUSTOM_UM_OPTIONAL_PROPERTIES.toArray
+				(new Property[MongoDBUserStoreConstants.CUSTOM_UM_OPTIONAL_PROPERTIES.size()]));
+		properties.setAdvancedProperties(MongoDBUserStoreConstants.CUSTOM_UM_ADVANCED_PROPERTIES.toArray
+				(new Property[MongoDBUserStoreConstants.CUSTOM_UM_ADVANCED_PROPERTIES.size()]));
+		return properties;
+
+	}
+
+	private static <T> T[] concat(T[] first, T[] second) {
+		T[] result = Arrays.copyOf(first, first.length + second.length);
+		System.arraycopy(second, 0, result, first.length, second.length);
+		return result;
 	}
 
 	public Map<String, String> getProperties(org.wso2.carbon.user.api.Tenant arg0)
