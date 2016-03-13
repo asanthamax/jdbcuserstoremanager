@@ -7,7 +7,12 @@ import org.wso2.carbon.user.core.service.RealmService;
 
 import mongodb.usermanager.UserStoreManager;
 
-public class UserStoreManagerDSComponent {
+/**
+ * @scr.component name="mongodb.usermanager.dscomponent" immediate=true
+ * @scr.reference name="realm.service"
+ * interface="org.wso2.carbon.user.core.service.RealmService"cardinality="1..1"
+ * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
+ */public class UserStoreManagerDSComponent {
 
 	private static Log log = (Log) LogFactory.getLog(UserStoreManagerDSComponent.class);
     private static RealmService realmService;
@@ -24,6 +29,7 @@ public class UserStoreManagerDSComponent {
             log.debug("MongoDB User Store Manager is deactivated ");
         }
     }
+
 
     protected void setRealmService(RealmService rlmService) {
           realmService = rlmService;
